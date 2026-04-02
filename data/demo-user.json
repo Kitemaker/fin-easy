@@ -1,0 +1,62 @@
+{
+  "user": {
+    "name": "Jordan Chen",
+    "email": "jordan.chen@example.com",
+    "city": "San Francisco"
+  },
+  "checking": {
+    "accountType": "checking",
+    "bankName": "Chase",
+    "accountNumberPreview": "****4821",
+    "balance": 4247.83,
+    "availableBalance": 4097.83,
+    "recentTransactions": [
+      { "id": "txn_001", "date": "2026-03-30", "description": "Whole Foods Market", "amount": -67.43, "category": "Groceries", "merchant": "Whole Foods" },
+      { "id": "txn_002", "date": "2026-03-29", "description": "Uber Eats", "amount": -34.19, "category": "Dining", "merchant": "Uber Eats" },
+      { "id": "txn_003", "date": "2026-03-28", "description": "Netflix", "amount": -15.99, "category": "Subscriptions", "merchant": "Netflix" },
+      { "id": "txn_004", "date": "2026-03-28", "description": "Spotify Premium", "amount": -9.99, "category": "Subscriptions", "merchant": "Spotify" },
+      { "id": "txn_005", "date": "2026-03-27", "description": "Equinox Membership", "amount": -120.00, "category": "Health & Fitness", "merchant": "Equinox" },
+      { "id": "txn_006", "date": "2026-03-26", "description": "Safeway", "amount": -52.11, "category": "Groceries", "merchant": "Safeway" },
+      { "id": "txn_007", "date": "2026-03-25", "description": "Chipotle Mexican Grill", "amount": -18.50, "category": "Dining", "merchant": "Chipotle" },
+      { "id": "txn_008", "date": "2026-03-24", "description": "BART Transit", "amount": -6.40, "category": "Transportation", "merchant": "BART" },
+      { "id": "txn_009", "date": "2026-03-23", "description": "Amazon.com", "amount": -89.99, "category": "Shopping", "merchant": "Amazon" },
+      { "id": "txn_010", "date": "2026-03-22", "description": "GitHub Copilot", "amount": -10.00, "category": "Subscriptions", "merchant": "GitHub" },
+      { "id": "txn_011", "date": "2026-03-21", "description": "Salary Deposit - Acme Corp", "amount": 6500.00, "category": "Income", "merchant": "Acme Corp" },
+      { "id": "txn_012", "date": "2026-03-20", "description": "Vercel Pro", "amount": -20.00, "category": "Subscriptions", "merchant": "Vercel" },
+      { "id": "txn_013", "date": "2026-03-01", "description": "Rent - 123 Market St", "amount": -2400.00, "category": "Housing", "merchant": "Market St Apartments" },
+      { "id": "txn_014", "date": "2026-03-15", "description": "PG&E Electric Bill", "amount": -87.50, "category": "Utilities", "merchant": "PG&E" },
+      { "id": "txn_015", "date": "2026-03-10", "description": "Comcast Internet", "amount": -59.99, "category": "Utilities", "merchant": "Comcast" }
+    ]
+  },
+  "savings": {
+    "accountType": "savings",
+    "bankName": "Chase",
+    "accountNumberPreview": "****9374",
+    "balance": 18500.00,
+    "availableBalance": 18500.00,
+    "recentTransactions": [
+      { "id": "sav_001", "date": "2026-03-21", "description": "Auto Transfer from Checking", "amount": 500.00, "category": "Transfer", "merchant": "Chase Auto-Transfer" },
+      { "id": "sav_002", "date": "2026-02-21", "description": "Auto Transfer from Checking", "amount": 500.00, "category": "Transfer", "merchant": "Chase Auto-Transfer" }
+    ]
+  },
+  "portfolio": {
+    "totalValue": 32450.00,
+    "totalGainLoss": 4320.00,
+    "totalGainLossPercent": 15.34,
+    "positions": [
+      { "symbol": "AAPL", "name": "Apple Inc.", "shares": 25, "currentPrice": 198.45, "totalValue": 4961.25, "gainLoss": 612.50, "gainLossPercent": 14.08, "assetType": "stock" },
+      { "symbol": "MSFT", "name": "Microsoft Corporation", "shares": 15, "currentPrice": 412.30, "totalValue": 6184.50, "gainLoss": 934.50, "gainLossPercent": 17.79, "assetType": "stock" },
+      { "symbol": "VTI", "name": "Vanguard Total Stock Market ETF", "shares": 40, "currentPrice": 248.60, "totalValue": 9944.00, "gainLoss": 1240.00, "gainLossPercent": 14.26, "assetType": "etf" },
+      { "symbol": "QQQ", "name": "Invesco QQQ Trust", "shares": 18, "currentPrice": 485.20, "totalValue": 8733.60, "gainLoss": 1143.00, "gainLossPercent": 15.07, "assetType": "etf" },
+      { "symbol": "NVDA", "name": "NVIDIA Corporation", "shares": 8, "currentPrice": 328.33, "totalValue": 2626.64, "gainLoss": 390.00, "gainLossPercent": 17.44, "assetType": "stock" }
+    ],
+    "allocation": { "stocks": 42, "etfs": 57, "cash": 1 }
+  },
+  "bills": [
+    { "id": "bill_001", "name": "Rent", "amount": 2400.00, "dueDate": "2026-04-01", "status": "upcoming", "category": "Housing", "autopay": false },
+    { "id": "bill_002", "name": "PG&E", "amount": 87.50, "dueDate": "2026-04-08", "status": "upcoming", "category": "Utilities", "autopay": true },
+    { "id": "bill_003", "name": "Comcast", "amount": 59.99, "dueDate": "2026-04-10", "status": "upcoming", "category": "Utilities", "autopay": true },
+    { "id": "bill_004", "name": "Netflix", "amount": 15.99, "dueDate": "2026-04-15", "status": "upcoming", "category": "Subscriptions", "autopay": true },
+    { "id": "bill_005", "name": "Spotify", "amount": 9.99, "dueDate": "2026-04-15", "status": "upcoming", "category": "Subscriptions", "autopay": true }
+  ]
+}
