@@ -2,6 +2,7 @@
 
 import type { DynamicToolUIPart, ToolUIPart } from 'ai';
 import { InvestmentPortfolioChart } from './investment-portfolio-chart';
+import { BillsTimeline } from './bills-timeline';
 
 const SERVICE_META: Record<string, { icon: string; name: string }> = {
   getAccountBalance: { icon: '🏦', name: 'Account Balance' },
@@ -170,6 +171,7 @@ export function ToolInvocationCard({ toolName, part }: ToolInvocationCardProps) 
     const summary = getSuccessSummary(toolName, output);
     const isPayBill = toolName === 'payBill';
     const isPortfolio = toolName === 'getInvestmentPortfolio';
+    const isBills = toolName === 'getBills';
 
     return (
       <div className="my-1">
@@ -205,6 +207,14 @@ export function ToolInvocationCard({ toolName, part }: ToolInvocationCardProps) 
           'totalValue' in (output as object) && (
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             <InvestmentPortfolioChart data={output as any} />
+          )}
+
+        {/* Bills timeline */}
+        {isBills && output != null && typeof output === 'object' &&
+          'bills' in (output as object) &&
+          Array.isArray((output as { bills: unknown[] }).bills) && (
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            <BillsTimeline bills={(output as any).bills} />
           )}
       </div>
     );

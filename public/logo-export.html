@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FinEasy — Logo Export</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: #0f0f14;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 48px 24px;
+    }
+
+    h1 { font-size: 22px; font-weight: 800; color: #f8fafc; margin-bottom: 4px; }
+    p.sub { font-size: 13px; color: #64748b; margin-bottom: 48px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+    }
+
+    .card {
+      background: #1e1e2e;
+      border: 1px solid #2d2d3f;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .card-label {
+      padding: 14px 18px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #64748b;
+      border-bottom: 1px solid #2d2d3f;
+    }
+    .card-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+    .card-preview.dark  { background: #0f0f14; }
+    .card-preview.light { background: #f8fafc; }
+    .card-preview.purple{ background: linear-gradient(135deg,#8b5cf6,#6d28d9); }
+
+    canvas { display: block; image-rendering: crisp-edges; }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      padding: 12px 18px;
+      border-top: 1px solid #2d2d3f;
+      flex-wrap: wrap;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: inherit;
+      transition: opacity .15s;
+    }
+    button:hover { opacity: .85; }
+    button.primary { background: #8b5cf6; color: #fff; }
+    button.secondary { background: #2d2d3f; color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+<h1>FinEasy Logo Export</h1>
+<p class="sub">Open in any browser — click Download PNG to save each variant.</p>
+
+<div class="grid" id="grid"></div>
+
+<script>
+/* ─── Drawing utilities ─── */
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y,     x + w, y + r,     r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x,     y + h, x,     y + h - r, r);
+  ctx.lineTo(x,     y + r);
+  ctx.arcTo(x,     y,     x + r, y,          r);
+  ctx.closePath();
+}
+
+function drawMark(ctx, x, y, size, barOpacities) {
+  // The mark: 3 ascending bars anchored at bottom, inside a (size×size) cell at (x,y)
+  // Original viewBox 0 0 20 20 → scale to size
+  const s  = size / 20;
+  const op = barOpacities ?? [0.65, 0.85, 1.0];
+
+  const bars = [
+    { bx:1,  by:13, bw:4, bh:7  },   // left, short
+    { bx:8,  by:8,  bw:4, bh:12 },   // mid
+    { bx:15, by:2,  bw:4, bh:18 },   // right, tall
+  ];
+
+  bars.forEach(({ bx, by, bw, bh }, i) => {
+    ctx.globalAlpha = op[i];
+    ctx.fillStyle = '#ffffff';
+    roundRect(ctx, x + bx*s, y + by*s, bw*s, bh*s, 1.5*s);
+    ctx.fill();
+  });
+
+  // Trend line
+  ctx.globalAlpha = 0.35;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth   = 1.6 * s;
+  ctx.lineCap     = 'round';
+  ctx.lineJoin    = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x + 3*s,  y + 13*s);
+  ctx.lineTo(x + 10*s, y + 8*s);
+  ctx.lineTo(x + 17*s, y + 2*s);
+  ctx.stroke();
+
+  ctx.globalAlpha = 1;
+}
+
+function gradientBg(ctx, x, y, w, h) {
+  const g = ctx.createLinearGradient(x, y, x + w, y + h);
+  g.addColorStop(0,   '#8b5cf6');
+  g.addColorStop(1,   '#6d28d9');
+  return g;
+}
+
+/* ─── Variants ─── */
+
+const VARIANTS = [
+  {
+    id: 'icon-512',
+    label: 'App Icon — 512×512 (Auth0, favicon)',
+    preview: 'dark',
+    filename: 'fineasy-icon-512.png',
+    w: 512, h: 512,
+    draw(ctx, W, H) {
+      const R  = W * 0.18;   // corner radius
+      const pad = W * 0.16;  // inner padding
+
+      // Background
+      ctx.fillStyle = gradientBg(ctx, 0, 0, W, H);
+      roundRect(ctx, 0, 0, W, H, R);
+      ctx.fill();
+
+      // Drop shadow hint (inner glow)
+      ctx.shadowColor   = 'rgba(0,0,0,0.25)';
+      ctx.shadowBlur    = W * 0.08;
+      ctx.shadowOffsetY = W * 0.04;
+
+      // Mark
+      drawMark(ctx, pad, pad, W - pad * 2, [0.6, 0.82, 1.0]);
+      ctx.shadowColor = 'transparent';
+    },
+  },
+  {
+    id: 'icon-192',
+    label: 'App Icon — 192×192 (PWA, small)',
+    preview: 'dark',
+    filename: 'fineasy-icon-192.png',
+    w: 192, h: 192,
+    draw(ctx, W, H) {
+      ctx.fillStyle = gradientBg(ctx, 0, 0, W, H);
+      roundRect(ctx, 0, 0, W, H, W * 0.18);
+      ctx.fill();
+      const pad = W * 0.16;
+      drawMark(ctx, pad, pad, W - pad * 2);
+    },
+  },
+  {
+    id: 'logo-dark',
+    label: 'Horizontal Logo — dark bg (presentations)',
+    preview: 'dark',
+    filename: 'fineasy-logo-dark.png',
+    w: 800, h: 200,
+    draw(ctx, W, H) {
+      // Icon box
+      const iconSize = H * 0.6;
+      const iconX    = H * 0.2;
+      const iconY    = (H - iconSize) / 2;
+      const R        = iconSize * 0.18;
+
+      ctx.fillStyle = gradientBg(ctx, iconX, iconY, iconSize, iconSize);
+      roundRect(ctx, iconX, iconY, iconSize, iconSize, R);
+      ctx.fill();
+
+      const pad = iconSize * 0.16;
+      drawMark(ctx, iconX + pad, iconY + pad, iconSize - pad * 2);
+
+      // Wordmark
+      const textX = iconX + iconSize + H * 0.18;
+      const textY = H / 2;
+
+      ctx.fillStyle   = '#f8fafc';
+      ctx.font        = `800 ${H * 0.4}px Inter, system-ui, sans-serif`;
+      ctx.textBaseline = 'middle';
+      ctx.textAlign   = 'left';
+      ctx.fillText('FinEasy', textX, textY);
+    },
+  },
+  {
+    id: 'logo-light',
+    label: 'Horizontal Logo — light bg (documents)',
+    preview: 'light',
+    filename: 'fineasy-logo-light.png',
+    w: 800, h: 200,
+    draw(ctx, W, H) {
+      // White fill so PNG background is white
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, W, H);
+
+      const iconSize = H * 0.6;
+      const iconX    = H * 0.2;
+      const iconY    = (H - iconSize) / 2;
+
+      ctx.fillStyle = gradientBg(ctx, iconX, iconY, iconSize, iconSize);
+      roundRect(ctx, iconX, iconY, iconSize, iconSize, iconSize * 0.18);
+      ctx.fill();
+
+      const pad = iconSize * 0.16;
+      drawMark(ctx, iconX + pad, iconY + pad, iconSize - pad * 2);
+
+      ctx.fillStyle    = '#0f172a';
+      ctx.font         = `800 ${H * 0.4}px Inter, system-ui, sans-serif`;
+      ctx.textBaseline = 'middle';
+      ctx.textAlign    = 'left';
+      ctx.fillText('FinEasy', iconX + iconSize + H * 0.18, H / 2);
+    },
+  },
+  {
+    id: 'logo-purple',
+    label: 'Horizontal Logo — purple bg (Auth0 banner)',
+    preview: 'purple',
+    filename: 'fineasy-logo-purple.png',
+    w: 800, h: 200,
+    draw(ctx, W, H) {
+      // Purple background
+      ctx.fillStyle = gradientBg(ctx, 0, 0, W, H);
+      ctx.fillRect(0, 0, W, H);
+
+      const iconSize = H * 0.6;
+      const iconX    = H * 0.2;
+      const iconY    = (H - iconSize) / 2;
+
+      // Icon box: semi-transparent white overlay
+      ctx.fillStyle = 'rgba(255,255,255,0.18)';
+      roundRect(ctx, iconX, iconY, iconSize, iconSize, iconSize * 0.18);
+      ctx.fill();
+
+      const pad = iconSize * 0.16;
+      drawMark(ctx, iconX + pad, iconY + pad, iconSize - pad * 2);
+
+      ctx.fillStyle    = '#ffffff';
+      ctx.font         = `800 ${H * 0.4}px Inter, system-ui, sans-serif`;
+      ctx.textBaseline = 'middle';
+      ctx.textAlign    = 'left';
+      ctx.fillText('FinEasy', iconX + iconSize + H * 0.18, H / 2);
+    },
+  },
+  {
+    id: 'icon-transparent',
+    label: 'Icon — transparent bg (overlay use)',
+    preview: 'dark',
+    filename: 'fineasy-icon-transparent.png',
+    w: 512, h: 512,
+    draw(ctx, W, H) {
+      // No background fill — transparent
+      const pad = W * 0.05;
+      // Draw gradient on the rounded rect only
+      ctx.fillStyle = gradientBg(ctx, 0, 0, W, H);
+      roundRect(ctx, pad, pad, W - pad*2, H - pad*2, (W - pad*2) * 0.18);
+      ctx.fill();
+
+      const markPad = W * 0.2;
+      drawMark(ctx, markPad, markPad, W - markPad * 2);
+    },
+  },
+];
+
+/* ─── Render cards ─── */
+
+const grid = document.getElementById('grid');
+
+VARIANTS.forEach(v => {
+  // Canvas (2× for retina quality)
+  const scale  = 2;
+  const canvas = document.createElement('canvas');
+  canvas.id     = v.id;
+  canvas.width  = v.w * scale;
+  canvas.height = v.h * scale;
+  canvas.style.width  = Math.min(v.w, 280) + 'px';
+  canvas.style.height = Math.round(Math.min(v.w, 280) * (v.h / v.w)) + 'px';
+
+  const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+  v.draw(ctx, v.w, v.h);
+
+  // Card markup
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="card-label">${v.label}</div>
+    <div class="card-preview ${v.preview}" id="preview-${v.id}"></div>
+    <div class="actions">
+      <button class="primary" onclick="downloadPNG('${v.id}','${v.filename}')">⬇ Download PNG</button>
+      <span style="font-size:11px;color:#475569;line-height:1;align-self:center">${v.w}×${v.h}px</span>
+    </div>
+  `;
+
+  card.querySelector(`#preview-${v.id}`).appendChild(canvas);
+  grid.appendChild(card);
+});
+
+function downloadPNG(canvasId, filename) {
+  const canvas = document.getElementById(canvasId);
+  const a = document.createElement('a');
+  a.href     = canvas.toDataURL('image/png');
+  a.download = filename;
+  a.click();
+}
+</script>
+</body>
+</html>
