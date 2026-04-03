@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { ConnectedService } from '@/types';
+import { ServiceIcon } from '@/components/ui/logo';
 
 interface ServiceCardProps {
   service: ConnectedService;
@@ -80,11 +81,11 @@ export function ServiceCard({ service, onConnect, onRevoke }: ServiceCardProps) 
       <div className="flex items-start justify-between gap-3 p-4">
         <div className="flex items-start gap-3">
           <div
-            className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg text-xl ${
-              service.connected ? 'bg-emerald-100' : 'bg-gray-100'
+            className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${
+              service.connected ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'
             }`}
           >
-            {service.icon}
+            <ServiceIcon serviceId={service.id} className="h-5 w-5" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
@@ -145,8 +146,9 @@ export function ServiceCard({ service, onConnect, onRevoke }: ServiceCardProps) 
         <div className="mx-4 mb-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
           {/* Panel header */}
           <div className="flex items-start justify-between gap-2">
-            <h3 className="text-sm font-semibold text-gray-900">
-              {service.icon} {service.name} wants access to your account
+            <h3 className="flex items-center gap-1.5 text-sm font-semibold text-gray-900">
+              <ServiceIcon serviceId={service.id} className="h-4 w-4 text-gray-600" />
+              {service.name} wants access to your account
             </h3>
             <span className="flex-shrink-0 rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-medium text-gray-400">
               OAuth 2.0 Authorization

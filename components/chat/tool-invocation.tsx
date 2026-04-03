@@ -1,6 +1,7 @@
 'use client';
 
 import type { DynamicToolUIPart, ToolUIPart } from 'ai';
+import { InvestmentPortfolioChart } from './investment-portfolio-chart';
 
 const SERVICE_META: Record<string, { icon: string; name: string }> = {
   getAccountBalance: { icon: '🏦', name: 'Account Balance' },
@@ -168,31 +169,43 @@ export function ToolInvocationCard({ toolName, part }: ToolInvocationCardProps) 
   if (isSuccess) {
     const summary = getSuccessSummary(toolName, output);
     const isPayBill = toolName === 'payBill';
+    const isPortfolio = toolName === 'getInvestmentPortfolio';
+
     return (
-      <div className="my-1 rounded-lg border border-l-4 border-emerald-200 border-l-emerald-500 bg-emerald-50 px-3 py-2 text-sm">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span>{meta.icon}</span>
-          <span className="font-medium text-gray-700">{meta.name}</span>
-          <span className="font-medium text-emerald-600">✓</span>
-          <span className="text-emerald-700">{summary}</span>
-          {isPayBill && (
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700">
-              Write scope
-            </span>
+      <div className="my-1">
+        {/* Status pill */}
+        <div className="rounded-lg border border-l-4 border-emerald-200 border-l-emerald-500 bg-emerald-50 px-3 py-2 text-sm">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span>{meta.icon}</span>
+            <span className="font-medium text-gray-700">{meta.name}</span>
+            <span className="font-medium text-emerald-600">✓</span>
+            <span className="text-emerald-700">{summary}</span>
+            {isPayBill && (
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700">
+                Write scope
+              </span>
+            )}
+          </div>
+          {inputEntries.length > 0 && (
+            <div className="mt-1.5 flex flex-wrap gap-1">
+              {inputEntries.map(([k, v]) => (
+                <span
+                  key={k}
+                  className="rounded-md bg-gray-100 px-2 py-0.5 text-[11px] text-gray-500"
+                >
+                  <span className="font-medium text-gray-600">{k}:</span> {v}
+                </span>
+              ))}
+            </div>
           )}
         </div>
-        {inputEntries.length > 0 && (
-          <div className="mt-1.5 flex flex-wrap gap-1">
-            {inputEntries.map(([k, v]) => (
-              <span
-                key={k}
-                className="rounded-md bg-gray-100 px-2 py-0.5 text-[11px] text-gray-500"
-              >
-                <span className="font-medium text-gray-600">{k}:</span> {v}
-              </span>
-            ))}
-          </div>
-        )}
+
+        {/* Inline portfolio chart */}
+        {isPortfolio && output != null && typeof output === 'object' &&
+          'totalValue' in (output as object) && (
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            <InvestmentPortfolioChart data={output as any} />
+          )}
       </div>
     );
   }

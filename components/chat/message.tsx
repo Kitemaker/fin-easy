@@ -4,6 +4,7 @@ import type { UIMessage } from 'ai';
 import { isToolUIPart, isTextUIPart } from 'ai';
 import ReactMarkdown from 'react-markdown';
 import { ToolInvocationCard } from './tool-invocation';
+import { FinEasyAvatar } from '@/components/ui/logo';
 
 interface MessageProps {
   message: UIMessage;
@@ -17,9 +18,7 @@ export function ChatMessage({ message }: MessageProps) {
       <div className={`max-w-[85%] ${isUser ? 'order-1' : 'order-2'}`}>
         {!isUser && (
           <div className="mb-1 flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-xs text-white">
-              F
-            </div>
+            <FinEasyAvatar size={24} />
             <span className="text-xs font-medium text-gray-500">FinEasy</span>
           </div>
         )}

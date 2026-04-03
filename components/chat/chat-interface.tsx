@@ -4,6 +4,7 @@ import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { isToolUIPart } from 'ai';
 import { useRef, useEffect, useState } from 'react';
+import { FinEasyAvatar } from '@/components/ui/logo';
 import { ChatMessage } from './message';
 
 const SUGGESTED_PROMPTS = [
@@ -84,8 +85,16 @@ export function ChatInterface({ onToolCall, userName }: ChatInterfaceProps) {
         {isEmpty ? (
           <div className="flex h-full flex-col items-center justify-center gap-6">
             <div className="text-center">
-              <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-600 text-3xl text-white shadow-lg">
-                🏦
+              <div
+                className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg"
+                style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)', boxShadow: '0 4px 20px rgba(109,40,217,0.35)' }}
+              >
+                <svg width="36" height="36" viewBox="0 0 20 20" fill="none">
+                  <rect x="1"  y="13" width="4" height="7"  rx="1" fill="white" fillOpacity="0.65" />
+                  <rect x="8"  y="8"  width="4" height="12" rx="1" fill="white" fillOpacity="0.85" />
+                  <rect x="15" y="2"  width="4" height="18" rx="1" fill="white" />
+                  <path d="M3 13 L10 8 L17 2" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.45" />
+                </svg>
               </div>
               <h2 className="text-xl font-semibold text-gray-900">Hi {firstName}, I&apos;m FinEasy</h2>
               <p className="mt-1 text-sm text-gray-500">
@@ -145,9 +154,7 @@ export function ChatInterface({ onToolCall, userName }: ChatInterfaceProps) {
               <div className="flex justify-start">
                 <div className="rounded-2xl rounded-tl-sm bg-white px-4 py-3 shadow-sm ring-1 ring-gray-100">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-xs text-white">
-                      F
-                    </div>
+                    <FinEasyAvatar size={24} />
                     <div className="flex gap-1">
                       <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:0ms]" />
                       <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:150ms]" />

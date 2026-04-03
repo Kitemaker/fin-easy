@@ -1,41 +1,55 @@
+import { FinEasyLogo, IconBank, IconPiggyBank, IconTrendUp, IconReceipt, IconSearch, IconMail } from '@/components/ui/logo';
+
 const features = [
   {
-    icon: '🏦',
+    icon: <IconBank className="h-7 w-7" />,
+    iconBg: '#ede9fe',
+    iconColor: '#7c3aed',
     title: 'Checking Account',
     description: 'Monitor your balance and recent transactions. Get instant insight into daily spending.',
     service: 'Checking',
     badge: null,
   },
   {
-    icon: '💰',
+    icon: <IconPiggyBank className="h-7 w-7" />,
+    iconBg: '#ecfdf5',
+    iconColor: '#059669',
     title: 'Savings Account',
     description: 'Track your savings balance and progress toward financial goals.',
     service: 'Savings',
     badge: null,
   },
   {
-    icon: '📈',
+    icon: <IconTrendUp className="h-7 w-7" />,
+    iconBg: '#ede9fe',
+    iconColor: '#7c3aed',
     title: 'Investment Portfolio',
     description: 'View positions, performance, and allocation across stocks and ETFs.',
     service: 'Investments',
     badge: 'read-only',
   },
   {
-    icon: '📋',
+    icon: <IconReceipt className="h-7 w-7" />,
+    iconBg: '#fffbeb',
+    iconColor: '#d97706',
     title: 'Bill Payment',
     description: 'View upcoming bills and pay them directly from the chat. Never miss a due date.',
     service: 'Bills',
     badge: 'write',
   },
   {
-    icon: '🔍',
+    icon: <IconSearch className="h-7 w-7" />,
+    iconBg: '#eff6ff',
+    iconColor: '#2563eb',
     title: 'Spending Analysis',
     description: 'Categorize transactions, flag anomalies, and surface actionable insights.',
     service: 'Analysis',
     badge: null,
   },
   {
-    icon: '📧',
+    icon: <IconMail className="h-7 w-7" />,
+    iconBg: '#fdf2f8',
+    iconColor: '#9333ea',
     title: 'Email Alerts',
     description: 'Receive spending alerts and payment confirmations directly in your inbox.',
     service: 'Email',
@@ -63,12 +77,7 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="border-b px-6 py-4" style={{ borderColor: '#e2e8f0', background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)', position: 'sticky', top: 0, zIndex: 50 }}>
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg text-lg font-bold text-white" style={{ background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)' }}>
-              F
-            </div>
-            <span className="text-lg font-bold tracking-tight" style={{ color: '#0f172a' }}>FinEasy</span>
-          </div>
+          <FinEasyLogo size="md" />
           <div className="flex items-center gap-3">
             <span className="hidden rounded-full px-3 py-1 text-xs font-medium sm:block" style={{ background: '#f3f0ff', border: '1px solid #c4b5fd', color: '#7c3aed' }}>
               Powered by Auth0 Token Vault
@@ -204,7 +213,12 @@ export default function LandingPage() {
                   boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
                 }}
               >
-                <div className="mb-3 text-3xl">{f.icon}</div>
+                <div
+                  className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl"
+                  style={{ background: f.iconBg, color: f.iconColor }}
+                >
+                  {f.icon}
+                </div>
                 <div className="mb-1 flex items-center gap-2">
                   <h3 className="font-semibold" style={{ color: '#0f172a' }}>{f.title}</h3>
                   {f.badge === 'read-only' && (

@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { ChatInterface } from '@/components/chat/chat-interface';
 import { ConnectionsPanel } from '@/components/connections/connections-panel';
+import { FinEasyLogo } from '@/components/ui/logo';
 import type { AuditLogEntry } from '@/types';
 
 const SERVICE_NAMES: Record<string, string> = {
@@ -68,12 +69,7 @@ export function DashboardClient({ user }: { user: User }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white" style={{ background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)' }}>
-              F
-            </div>
-            <span className="font-semibold" style={{ color: '#0f172a' }}>FinEasy</span>
-          </div>
+          <FinEasyLogo size="sm" />
           <span className="hidden rounded-full px-2.5 py-0.5 text-xs font-medium sm:block" style={{ background: '#f3f0ff', border: '1px solid #c4b5fd', color: '#7c3aed' }}>
             Auth0 Token Vault
           </span>
