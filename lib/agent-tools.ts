@@ -2,8 +2,15 @@ import { tool } from 'ai';
 import { z } from 'zod';
 import { getServiceToken } from './token-vault';
 import { sendSpendingAlert as sendAlert, sendBillPaymentConfirmation } from './services/resend';
-
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+import {
+  getCheckingData,
+  getSavingsData,
+  getInvestmentPortfolio as getPortfolioData,
+  getBills as getMockBills,
+  payBill as mockPayBill,
+  validateToken,
+  validateWriteToken,
+} from './services/mock-data';
 
 function notAuthorized(service: string, serviceId: string) {
   return {
@@ -13,17 +20,6 @@ function notAuthorized(service: string, serviceId: string) {
     message: `You haven't connected your ${service} yet. FinEasy needs your authorization to access it.`,
     connectUrl: '/dashboard/connections',
   };
-}
-
-async function fetchMockService(path: string, token: string, options: RequestInit = {}) {
-  return fetch(`${BASE_URL}${path}`, {
-    ...options,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      ...(options.headers ?? {}),
-    },
-  });
 }
 
 export function createAgentTools(userId: string, userEmail?: string, userName?: string) {
@@ -40,9 +36,8 @@ export function createAgentTools(userId: string, userEmail?: string, userName?: 
             accountType === 'checking' ? 'Checking Account' : 'Savings Account',
             accountType
           );
-        const res = await fetchMockService(`/api/mock/${accountType}`, token);
-        if (!res.ok) return notAuthorized(accountType, accountType);
-        return res.json();
+        if (!validateToken(token)) return notAuthorized(accountType, accountType);
+        return accountType === 'checking' ? getCheckingData() : getSavingsData();
       },
     }),
 
@@ -55,9 +50,8 @@ export function createAgentTools(userId: string, userEmail?: string, userName?: 
       execute: async ({ limit, category }) => {
         const token = await getServiceToken(userId, 'checking');
         if (!token) return notAuthorized('Checking Account', 'checking');
-        const res = await fetchMockService('/api/mock/checking', token);
-        if (!res.ok) return notAuthorized('Checking Account', 'checking');
-        const data = await res.json();
+        if (!validateToken(token)) return notAuthorized('Checking Account', 'checking');
+        const data = getCheckingData();
         let txns = data.recentTransactions ?? [];
         if (category)
           txns = txns.filter((t: { category: string }) =>
@@ -73,9 +67,8 @@ export function createAgentTools(userId: string, userEmail?: string, userName?: 
       execute: async () => {
         const token = await getServiceToken(userId, 'checking');
         if (!token) return notAuthorized('Checking Account', 'checking');
-        const res = await fetchMockService('/api/mock/checking', token);
-        if (!res.ok) return notAuthorized('Checking Account', 'checking');
-        const data = await res.json();
+        if (!validateToken(token)) return notAuthorized('Checking Account', 'checking');
+        const data = getCheckingData();
         const transactions = data.recentTransactions ?? [];
 
         const byCategory: Record<string, number> = {};
@@ -128,9 +121,8 @@ export function createAgentTools(userId: string, userEmail?: string, userName?: 
       execute: async () => {
         const token = await getServiceToken(userId, 'investments');
         if (!token) return notAuthorized('Investment Portfolio', 'investments');
-        const res = await fetchMockService('/api/mock/investments', token);
-        if (!res.ok) return notAuthorized('Investment Portfolio', 'investments');
-        return res.json();
+        if (!validateToken(token)) return notAuthorized('Investment Portfolio', 'investments');
+        return getPortfolioData();
       },
     }),
 
@@ -140,9 +132,8 @@ export function createAgentTools(userId: string, userEmail?: string, userName?: 
       execute: async () => {
         const token = await getServiceToken(userId, 'bills');
         if (!token) return notAuthorized('Bill Payment', 'bills');
-        const res = await fetchMockService('/api/mock/bills', token);
-        if (!res.ok) return notAuthorized('Bill Payment', 'bills');
-        return res.json();
+        if (!validateToken(token)) return notAuthorized('Bill Payment', 'bills');
+        return { bills: getMockBills() };
       },
     }),
 
@@ -156,12 +147,8 @@ export function createAgentTools(userId: string, userEmail?: string, userName?: 
       execute: async ({ billId, sendConfirmationEmail }) => {
         const token = await getServiceToken(userId, 'bills');
         if (!token) return notAuthorized('Bill Payment', 'bills');
-        const res = await fetchMockService('/api/mock/bills', token, {
-          method: 'POST',
-          body: JSON.stringify({ billId }),
-        });
-        if (!res.ok) return notAuthorized('Bill Payment', 'bills');
-        const { result } = await res.json();
+        if (!validateWriteToken(token)) return notAuthorized('Bill Payment', 'bills');
+        const result = mockPayBill(billId);
         let emailSent = false;
         if (sendConfirmationEmail) {
           const emailToken = await getServiceToken(userId, 'email');
