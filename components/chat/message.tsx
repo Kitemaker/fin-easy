@@ -30,7 +30,7 @@ export function ChatMessage({ message }: MessageProps) {
               return (
                 <div
                   key={i}
-                  className="rounded-2xl rounded-tr-sm bg-[#1e3a5f] px-4 py-2.5 text-white"
+                  className="rounded-2xl rounded-tr-sm px-4 py-2.5 text-white" style={{ background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)' }}
                 >
                   <p className="text-sm leading-relaxed">{part.text}</p>
                 </div>
