@@ -1,6 +1,6 @@
 # FinEasy — AI Personal Finance Agent
 
-> Built for the [Auth0 "Authorized to Act" Hackathon](https://authorizedtoact.devpost.com/) · $10K prize pool · Deadline April 6, 2026
+> Built for the [Auth0 "Authorized to Act" Hackathon](https://authorizedtoact.devpost.com/) 
 
 FinEasy is an AI-powered personal finance agent that monitors accounts, analyzes spending, tracks bills, and pays them on your behalf — while keeping you in complete control of what it can access.
 
