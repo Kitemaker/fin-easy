@@ -34,7 +34,7 @@ next-env.d.ts
 
 # claude
 CLAUDE.md
-
+CLAUDE-*.log
 
 # misc
 .DS_Store
