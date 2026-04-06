@@ -18,18 +18,30 @@ export default function HelpPage() {
           {[
             {
               num: '01',
+              title: 'Create an account or log in',
+              body: 'Click "Get started" on the home page. You will be redirected to Auth0\'s Universal Login — sign up with your email or log in with an existing account. Auth0 handles all authentication securely.',
+              tip: null,
+            },
+            {
+              num: '02',
+              title: 'Land on your dashboard',
+              body: 'After logging in you are taken straight to your personal dashboard. Your session is secured by Auth0 — no passwords are stored in FinEasy.',
+              tip: null,
+            },
+            {
+              num: '03',
               title: 'Connect your financial services',
               body: 'Open the left sidebar and click Connect next to each service you want FinEasy to access. Each service gets its own secure token stored in Auth0 Token Vault — the agent can only use services you have explicitly authorised.',
               tip: 'You can revoke any service at any time. FinEasy immediately loses access.',
             },
             {
-              num: '02',
+              num: '04',
               title: 'Ask in plain English',
               body: 'Type your question or request in the chat box at the bottom. FinEasy understands natural language — no special commands needed.',
               tip: null,
             },
             {
-              num: '03',
+              num: '05',
               title: 'Review what the agent does',
               body: 'Every tool call FinEasy makes is recorded in the Audit Log at the bottom of the sidebar. You can see which service was accessed, which token was used, and whether it succeeded.',
               tip: null,
@@ -48,6 +60,26 @@ export default function HelpPage() {
               </div>
             </div>
           ))}
+        </section>
+
+        {/* Example Questions */}
+        <section className="space-y-3">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400">Example questions to ask</h2>
+          <div className="rounded-xl bg-white shadow-sm ring-1 ring-gray-100 divide-y divide-gray-100">
+            {[
+              { prompt: "What's my checking account balance and recent transactions?", note: 'Reads your checking account balance and fetches recent transactions' },
+              { prompt: 'Analyze my spending this month', note: 'Categorizes transactions and flags unusual spending' },
+              { prompt: "What bills do I have coming up?", note: 'Lists upcoming bills with due dates and amounts' },
+              { prompt: 'Show me my investment portfolio', note: 'Reads positions, performance, and allocation (read-only)' },
+              { prompt: 'Pay my Netflix bill', note: 'Uses write scope to pay the specified bill — shows confirmation number' },
+              { prompt: 'Send me a spending summary email', note: 'Sends a spending summary to your email address' },
+            ].map((item) => (
+              <div key={item.prompt} className="px-5 py-3.5">
+                <p className="text-sm font-medium text-gray-800">&ldquo;{item.prompt}&rdquo;</p>
+                <p className="mt-0.5 text-xs text-gray-400">{item.note}</p>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Available Services */}
@@ -97,26 +129,6 @@ export default function HelpPage() {
                 Revoke the bills service at any time to remove this capability immediately.
               </p>
             </div>
-          </div>
-        </section>
-
-        {/* Example Questions */}
-        <section className="space-y-3">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400">Example questions to ask</h2>
-          <div className="rounded-xl bg-white shadow-sm ring-1 ring-gray-100 divide-y divide-gray-100">
-            {[
-              { prompt: "What's my checking account balance and recent transactions?", note: 'Reads your checking account balance and fetches recent transactions' },
-              { prompt: 'Analyze my spending this month', note: 'Categorizes transactions and flags unusual spending' },
-              { prompt: "What bills do I have coming up?", note: 'Lists upcoming bills with due dates and amounts' },
-              { prompt: 'Show me my investment portfolio', note: 'Reads positions, performance, and allocation (read-only)' },
-              { prompt: 'Pay my Netflix bill', note: 'Uses write scope to pay the specified bill — shows confirmation number' },
-              { prompt: 'Send me a spending summary email', note: 'Sends a spending summary to your email address' },
-            ].map((item) => (
-              <div key={item.prompt} className="px-5 py-3.5">
-                <p className="text-sm font-medium text-gray-800">&ldquo;{item.prompt}&rdquo;</p>
-                <p className="mt-0.5 text-xs text-gray-400">{item.note}</p>
-              </div>
-            ))}
           </div>
         </section>
 
