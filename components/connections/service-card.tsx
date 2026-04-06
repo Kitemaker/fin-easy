@@ -78,59 +78,57 @@ export function ServiceCard({ service, onConnect, onRevoke }: ServiceCardProps) 
       }`}
     >
       {/* Service info row */}
-      <div className="flex items-start justify-between gap-3 p-4">
-        <div className="flex min-w-0 items-start gap-3">
-          <div
-            className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${
-              service.connected ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'
-            }`}
-          >
-            <ServiceIcon serviceId={service.id} className="h-5 w-5" />
-          </div>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-medium text-gray-900">{service.name}</span>
+      <div className="flex items-start gap-3 p-4">
+        <div
+          className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${
+            service.connected ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'
+          }`}
+        >
+          <ServiceIcon serviceId={service.id} className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="truncate font-medium text-gray-900">{service.name}</span>
               {service.connected && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                <span className="inline-flex flex-shrink-0 items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                   Connected
                 </span>
               )}
               {isWrite ? (
-                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700">
+                <span className="flex-shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700">
                   Write
                 </span>
               ) : (
-                <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-medium text-blue-700">
+                <span className="flex-shrink-0 rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-medium text-blue-700">
                   Read
                 </span>
               )}
             </div>
-            <p className="mt-0.5 text-xs text-gray-500">{service.description}</p>
-{service.connected && service.connectedAt && (
-              <p className="mt-0.5 text-xs text-gray-400">
-                Since {new Date(service.connectedAt).toLocaleDateString()}
-              </p>
+            {!service.connected && (
+              <button
+                onClick={handleConnectClick}
+                disabled={loading || showConsent}
+                className="flex-shrink-0 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-emerald-700 disabled:opacity-50"
+              >
+                Connect
+              </button>
             )}
           </div>
-        </div>
-
-        <div className="flex-shrink-0">
-          {service.connected ? (
+          <p className="mt-0.5 line-clamp-2 text-xs text-gray-500">{service.description}</p>
+          {service.connected && service.connectedAt && (
+            <p className="mt-0.5 text-xs text-gray-400">
+              Since {new Date(service.connectedAt).toLocaleDateString()}
+            </p>
+          )}
+          {service.connected && (
             <button
               onClick={handleRevoke}
               disabled={loading}
-              className="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+              className="mt-2 rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-50"
             >
               {loading ? 'Revoking...' : 'Revoke'}
-            </button>
-          ) : (
-            <button
-              onClick={handleConnectClick}
-              disabled={loading || showConsent}
-              className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-emerald-700 disabled:opacity-50"
-            >
-              Connect
             </button>
           )}
         </div>
