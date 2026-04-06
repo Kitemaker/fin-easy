@@ -84,39 +84,6 @@ export function ConnectionsPanel({ auditLog }: ConnectionsPanelProps) {
         </p>
       </div>
 
-      {/* Audit Log */}
-      {auditLog.length > 0 && (
-        <div>
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
-            Audit Log
-          </h3>
-          <div className="flex flex-col gap-1">
-            {auditLog.slice(-10).reverse().map((entry) => (
-              <div
-                key={entry.id}
-                className={`rounded-lg p-2 ${
-                  entry.success ? 'bg-gray-50' : 'bg-red-50'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-gray-700">{entry.action}</span>
-                  <span
-                    className={`text-xs ${entry.success ? 'text-green-600' : 'text-red-500'}`}
-                  >
-                    {entry.success ? '✓' : '✗'}
-                  </span>
-                </div>
-                <div className="mt-0.5 flex items-center gap-2">
-                  <span className="font-mono text-xs text-gray-400">{entry.tokenPreview}</span>
-                  <span className="text-xs text-gray-400">
-                    {new Date(entry.timestamp).toLocaleTimeString()}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

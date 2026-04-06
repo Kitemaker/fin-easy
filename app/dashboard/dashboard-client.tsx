@@ -1,29 +1,19 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { ChatInterface } from '@/components/chat/chat-interface';
 import { ConnectionsPanel } from '@/components/connections/connections-panel';
 import { FinEasyLogo } from '@/components/ui/logo';
 import type { AuditLogEntry } from '@/types';
 
-const SERVICE_NAMES: Record<string, string> = {
-  getAccountBalance: 'Account Balance',
-  getTransactions: 'Transactions',
-  analyzeSpending: 'Spending Analysis',
-  getInvestmentPortfolio: 'Investment Portfolio',
-  getBills: 'Bills',
-  payBill: 'Bill Payment',
-  sendSpendingAlert: 'Email Alert',
-};
-
-const SERVICE_TOKENS: Record<string, string> = {
-  getAccountBalance: 'demo_che****abc123',
-  getTransactions: 'demo_che****abc123',
-  analyzeSpending: 'demo_che****abc123',
-  getInvestmentPortfolio: 'demo_inv****ghi789',
-  getBills: 'demo_bil****jkl012',
-  payBill: 'demo_bil****jkl012',
-  sendSpendingAlert: 'demo_eml****mno345',
+const TOOL_LABELS: Record<string, { icon: string; service: string; action: string }> = {
+  getAccountBalance:      { icon: '🏦', service: 'Checking/Savings', action: 'Fetched account balance' },
+  getTransactions:        { icon: '🏦', service: 'Checking',         action: 'Fetched transactions' },
+  analyzeSpending:        { icon: '📊', service: 'Checking',         action: 'Analyzed spending' },
+  getInvestmentPortfolio: { icon: '📈', service: 'Investments',      action: 'Fetched portfolio' },
+  getBills:               { icon: '📋', service: 'Bills',            action: 'Fetched upcoming bills' },
+  payBill:                { icon: '💳', service: 'Bills',            action: 'Paid bill' },
+  sendSpendingAlert:      { icon: '📧', service: 'Email',            action: 'Sent spending alert' },
 };
 
 interface User {
@@ -36,16 +26,29 @@ interface User {
 export function DashboardClient({ user }: { user: User }) {
   const [auditLog, setAuditLog] = useState<AuditLogEntry[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [logOpen, setLogOpen] = useState(false);
+  const logRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (logRef.current && !logRef.current.contains(e.target as Node)) {
+        setLogOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleToolCall = useCallback((toolName: string, success: boolean) => {
+    const label = TOOL_LABELS[toolName];
     setAuditLog((prev) => [
       ...prev,
       {
         id: `${Date.now()}-${Math.random()}`,
         timestamp: new Date().toISOString(),
         service: toolName as AuditLogEntry['service'],
-        action: SERVICE_NAMES[toolName] ?? toolName,
-        tokenPreview: SERVICE_TOKENS[toolName] ?? 'unknown',
+        action: label?.action ?? toolName,
+        tokenPreview: label ? `${label.icon} ${label.service}` : toolName,
         success,
       },
     ]);
@@ -83,6 +86,58 @@ export function DashboardClient({ user }: { user: User }) {
           >
             Connections
           </a>
+
+          {/* Audit Log dropdown */}
+          <div className="relative hidden sm:block" ref={logRef}>
+            <button
+              onClick={() => setLogOpen((v) => !v)}
+              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium hover:bg-gray-100"
+              style={{ color: '#475569' }}
+            >
+              Activity Log
+              {auditLog.length > 0 && (
+                <span className="flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold text-white" style={{ background: '#8b5cf6' }}>
+                  {auditLog.length > 9 ? '9+' : auditLog.length}
+                </span>
+              )}
+            </button>
+
+            {logOpen && (
+              <div className="absolute right-0 top-full z-50 mt-1 w-80 rounded-xl border border-gray-200 bg-white shadow-lg">
+                <div className="flex items-center justify-between border-b border-gray-100 px-4 py-2.5">
+                  <span className="text-xs font-semibold text-gray-700">Agent Activity Log</span>
+                  {auditLog.length > 0 && (
+                    <span className="text-[10px] text-gray-400">{auditLog.length} action{auditLog.length !== 1 ? 's' : ''}</span>
+                  )}
+                </div>
+                {auditLog.length === 0 ? (
+                  <p className="px-4 py-6 text-center text-xs text-gray-400 italic">
+                    No activity yet — logs appear here as the agent runs tools.
+                  </p>
+                ) : (
+                  <div className="max-h-80 overflow-y-auto divide-y divide-gray-50">
+                    {auditLog.slice().reverse().map((entry) => (
+                      <div key={entry.id} className="flex items-start justify-between gap-3 px-4 py-2.5">
+                        <div className="min-w-0">
+                          <p className="text-xs font-medium text-gray-800">{entry.action}</p>
+                          <p className="mt-0.5 text-[11px] text-gray-400">{entry.tokenPreview}</p>
+                        </div>
+                        <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
+                          <span className={`text-xs font-semibold ${entry.success ? 'text-green-600' : 'text-red-500'}`}>
+                            {entry.success ? '✓ OK' : '✗ Denied'}
+                          </span>
+                          <span className="text-[10px] text-gray-400">
+                            {new Date(entry.timestamp).toLocaleTimeString()}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           <a
             href="/dashboard/help"
             className="hidden rounded-lg px-3 py-1.5 text-xs font-medium hover:bg-gray-100 sm:block"
