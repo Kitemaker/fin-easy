@@ -241,17 +241,6 @@ flowchart TD
     Tools -->|payBill confirmation| Resend
 ```
 
----
-
-## Judging Criteria
-
-| Criterion | Implementation |
-|---|---|
-| **Security model** | Per-service Token Vault isolation · read vs. write scope distinction · `validateWriteToken` enforced at API level · investments has no POST route |
-| **User control** | Connect/disconnect any service independently · explicit confirmation required before `payBill` · audit log for every agent action |
-| **Technical execution** | Next.js 16 + Vercel AI SDK v6 + Auth0 v4 · TypeScript strict · streaming AI responses |
-| **UX/Design** | Clean dashboard · inline tool transparency with Write scope badge · onboarding banner for new users |
-| **Novel authorization insight** | Read vs. write token scopes for financial services — the same user, same agent, different authorization levels per service |
 
 ---
 
