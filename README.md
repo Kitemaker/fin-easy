@@ -13,7 +13,7 @@ Built on **Auth0 Token Vault** (Auth0 for AI Agents), each financial service get
 1. **Login** with Auth0 — your identity is verified before anything else
 2. **Connect services** — choose which financial services the agent can access. Each gets its own token with the minimum required scope (read or write)
 3. **Ask in plain English** — "Analyze my spending this month", "What bills are due?", "Pay my Netflix bill"
-4. **Stay in control** — every agent action is logged in the audit trail. Revoke any service instantly
+4. **Stay in control** — every agent action is recorded in the **Activity Log** (top nav bar). Revoke any service instantly
 
 ---
 
